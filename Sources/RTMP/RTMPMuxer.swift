@@ -119,11 +119,11 @@ extension RTMPMuxer: MP4SamplerDelegate {
         }
         configs[withID] = config
         switch type {
-        case AVMediaTypeVideo:
+        case AVMediaType.video.rawValue:
             var buffer:Data = Data([FLVFrameType.key.rawValue << 4 | FLVVideoCodec.avc.rawValue, FLVAVCPacketType.seq.rawValue, 0, 0, 0])
             buffer.append(config)
             delegate?.sampleOutput(video: buffer, withTimestamp: 0, muxer: self)
-        case AVMediaTypeAudio:
+        case AVMediaType.audio.rawValue:
             if (withID != 1) {
                 break
             }

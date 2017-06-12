@@ -61,7 +61,7 @@ public class RTMPBroadcaster : RTMPConnection {
         }
     }
 
-    open func rtmpStatusEvent(_ status:Notification) {
+    @objc open func rtmpStatusEvent(_ status:Notification) {
         let e:Event = Event.from(status)
         guard
             let data:ASObject = e.data as? ASObject,

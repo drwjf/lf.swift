@@ -9,9 +9,9 @@ open class GLLFView: GLKView {
     ]
     open static var defaultBackgroundColor:UIColor = UIColor.black
 
-    open var videoGravity:String = AVLayerVideoGravityResizeAspect
+    open var videoGravity:String = AVLayerVideoGravity.resizeAspect.rawValue
 
-    var position:AVCaptureDevicePosition = .back
+    var position:AVCaptureDevice.Position = .back
     var orientation:AVCaptureVideoOrientation = .portrait
 
     fileprivate var ciContext:CIContext!
@@ -26,13 +26,13 @@ open class GLLFView: GLKView {
     }
 
     public override init(frame: CGRect) {
-        super.init(frame: frame, context: EAGLContext(api: .openGLES2))
+        super.init(frame: frame, context: EAGLContext(api: .openGLES2)!)
         awakeFromNib()
     }
 
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.context = EAGLContext(api: .openGLES2)
+        self.context = EAGLContext(api: .openGLES2)!
     }
 
     open override func awakeFromNib() {

@@ -1,5 +1,6 @@
 import Foundation
 
+@objcMembers
 final class RTMPTSocket: NSObject, RTMPSocketCompatible {
     static let contentType:String = "application/x-fcs"
 
@@ -238,7 +239,7 @@ final class RTMPTSocket: NSObject, RTMPSocketCompatible {
         listen(data: data, response: response, error: error)
     }
 
-    @objc private func on(timer:Timer) {
+    func on(timer:Timer) {
         guard (Double(delay) / 60) < abs(lastResponse.timeIntervalSinceNow), !isRequesting else {
             return
         }

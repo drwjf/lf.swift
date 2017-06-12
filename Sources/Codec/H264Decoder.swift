@@ -9,6 +9,7 @@ protocol VideoDecoderDelegate: class {
 }
 
 // MARK: -
+@objcMembers
 final class H264Decoder {
     #if os(iOS)
     static let defaultAttributes:[NSString: AnyObject] = [

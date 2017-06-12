@@ -5,7 +5,7 @@ import AVFoundation
 protocol NetStreamDrawable: class {
 #if os(iOS) || os(macOS)
     var orientation:AVCaptureVideoOrientation { get set }
-    var position:AVCaptureDevicePosition { get set }
+    var position:AVCaptureDevice.Position { get set }
 #endif
 
     func draw(image:CIImage)
@@ -14,6 +14,7 @@ protocol NetStreamDrawable: class {
 }
 
 // MARK: -
+@objcMembers
 open class NetStream: NSObject {
     public private(set) var mixer:AVMixer = AVMixer()
     public let lockQueue:DispatchQueue = DispatchQueue(label: "com.haishinkit.HaishinKit.NetStream.lock")
@@ -145,12 +146,12 @@ open class NetStream: NSObject {
 #endif
 
     open func appendSampleBuffer(_ sampleBuffer:CMSampleBuffer, withType: CMSampleBufferType, options:[NSObject: AnyObject]? = nil) {
-        switch withType {
-        case .audio:
-            mixer.audioIO.captureOutput(nil, didOutputSampleBuffer: sampleBuffer, from: nil)
-        case .video:
-            mixer.videoIO.captureOutput(nil, didOutputSampleBuffer: sampleBuffer, from: nil)
-        }
+        //switch withType {
+        //case .audio:
+        // TODO: mixer.audioIO.captureOutput(nil, didOutputSampleBuffer: sampleBuffer, from: nil)
+        //case .video:
+            // TODO: mixer.videoIO.captureOutput(nil, didOutputSampleBuffer: sampleBuffer, from: nil)
+        //}
     }
 
     open func registerEffect(video effect:VisualEffect) -> Bool {
@@ -168,7 +169,7 @@ open class NetStream: NSObject {
     }
 
     #if os(iOS)
-    @objc private func on(uiDeviceOrientationDidChange:Notification) {
+    func on(uiDeviceOrientationDidChange:Notification) {
         if let orientation:AVCaptureVideoOrientation = DeviceUtil.videoOrientation(by: uiDeviceOrientationDidChange) {
             self.orientation = orientation
         }

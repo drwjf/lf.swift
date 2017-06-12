@@ -81,7 +81,7 @@ final class RTMPSocket: NetSocket, RTMPSocketCompatible {
         }
         doOutput(data: chunks.last!, locked: locked)
         if (logger.isEnabledFor(level: .verbose)) {
-            logger.verbose(chunk)
+            // logger.verbose(chunk)
         }
         return chunk.message!.length
     }

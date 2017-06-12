@@ -29,6 +29,7 @@ open class Responder: NSObject {
 /**
  flash.net.NetConnection for Swift
  */
+@objcMembers
 open class RTMPConnection: EventDispatcher {
     static public let defaultWindowSizeS:Int64 = 250000
     static public let supportedProtocols:[String] = ["rtmp", "rtmps", "rtmpt", "rtmpts"]
@@ -401,7 +402,7 @@ open class RTMPConnection: EventDispatcher {
         return RTMPChunk(message: message)
     }
 
-    @objc private func on(timer:Timer) {
+    func on(timer:Timer) {
         let totalBytesIn:Int64 = self.totalBytesIn
         let totalBytesOut:Int64 = self.totalBytesOut
         currentBytesInPerSecond = Int32(totalBytesIn - previousTotalBytesIn)

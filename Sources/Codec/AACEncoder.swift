@@ -12,6 +12,7 @@ protocol AudioEncoderDelegate: class {
   - https://developer.apple.com/library/ios/technotes/tn2236/_index.html
   - https://developer.apple.com/library/ios/documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html
  */
+@objcMembers
 final class AACEncoder: NSObject {
     static let supportedSettingsKeys:[String] = [
         "muted",
@@ -269,7 +270,7 @@ extension AACEncoder: Runnable {
 
 extension AACEncoder: AVCaptureAudioDataOutputSampleBufferDelegate {
     // MARK: AVCaptureAudioDataOutputSampleBufferDelegate
-    func captureOutput(_ captureOutput:AVCaptureOutput!, didOutputSampleBuffer sampleBuffer:CMSampleBuffer!, from connection:AVCaptureConnection!) {
+    func captureOutput(_ captureOutput:AVCaptureOutput, didOutput sampleBuffer:CMSampleBuffer, from connection:AVCaptureConnection) {
         encodeSampleBuffer(sampleBuffer)
     }
 }

@@ -582,7 +582,7 @@ open class RTMPStream: NetStream {
         info.on(timer: timer)
     }
 
-    @objc private func on(status:Notification) {
+    func on(status:Notification) {
         let e:Event = Event.from(status)
         guard let data:ASObject = e.data as? ASObject, let code:String = data["code"] as? String else {
             return

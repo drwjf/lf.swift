@@ -80,6 +80,7 @@ extension RTMPSharedObjectEvent: CustomStringConvertible {
 /**
  flash.net.SharedObject for Swift
  */
+@objcMembers
 open class RTMPSharedObject: EventDispatcher {
 
     static fileprivate var remoteSharedObjects:[String: RTMPSharedObject] = [:]

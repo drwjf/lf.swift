@@ -5,6 +5,7 @@ public protocol TimerDriverDelegate: class {
 }
 
 // MARK: -
+@objcMembers
 public class TimerDriver: NSObject {
     public var interval:UInt64 = MachUtil.nanosToAbs(10 * MachUtil.nanosPerMsec)
 
@@ -33,7 +34,7 @@ public class TimerDriver: NSObject {
         self.queue = withQueue
     }
 
-    @objc func on(timer:Timer) {
+    func on(timer:Timer) {
         guard nextFire <= mach_absolute_time() else {
             return
         }

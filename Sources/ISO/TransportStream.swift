@@ -69,7 +69,7 @@ struct TSPacket {
             if (adaptationField == nil) {
                 adaptationField = TSAdaptationField()
             }
-            adaptationField?.stuffing(remain)
+            // TODO: adaptationField?.stuffing(remain)
             adaptationField?.compute()
             return length
         }
@@ -142,11 +142,11 @@ struct TSTimestamp {
 
     static func encode(_ b:UInt64, _ m:UInt8) -> [UInt8] {
         var bytes:[UInt8] = [UInt8](repeating: 0x00, count: 5)
-        bytes[0] = UInt8(truncatingBitPattern: b >> 29) | 0x01 | m
-        bytes[1] = UInt8(truncatingBitPattern: b >> 22)
-        bytes[2] = UInt8(truncatingBitPattern: b >> 14) | 0x01
-        bytes[3] = UInt8(truncatingBitPattern: b >> 7)
-        bytes[4] = UInt8(truncatingBitPattern: b << 1)  | 0x01
+        bytes[0] = UInt8(extendingOrTruncating: b >> 29) | 0x01 | m
+        bytes[1] = UInt8(extendingOrTruncating: b >> 22)
+        bytes[2] = UInt8(extendingOrTruncating: b >> 14) | 0x01
+        bytes[3] = UInt8(extendingOrTruncating: b >> 7)
+        bytes[4] = UInt8(extendingOrTruncating: b << 1)  | 0x01
         return bytes
     }
 }
@@ -171,10 +171,10 @@ struct TSProgramClockReference {
 
     static func encode(_ b:UInt64, _ e:UInt16) -> [UInt8] {
         var bytes:[UInt8] = [UInt8](repeating: 0, count: 6)
-        bytes[0] = UInt8(truncatingBitPattern: b >> 25)
-        bytes[1] = UInt8(truncatingBitPattern: b >> 17)
-        bytes[2] = UInt8(truncatingBitPattern: b >> 9)
-        bytes[3] = UInt8(truncatingBitPattern: b >> 1)
+        bytes[0] = UInt8(extendingOrTruncating: b >> 25)
+        bytes[1] = UInt8(extendingOrTruncating: b >> 17)
+        bytes[2] = UInt8(extendingOrTruncating: b >> 9)
+        bytes[3] = UInt8(extendingOrTruncating: b >> 1)
         bytes[4] = 0xff
         if (b & 1 == 1) {
             bytes[4] |= 0x80
@@ -186,7 +186,7 @@ struct TSProgramClockReference {
         } else {
             bytes[4] &= 0xfe
         }
-        bytes[5] = UInt8(truncatingBitPattern: e)
+        bytes[5] = UInt8(extendingOrTruncating: e)
         return bytes
     }
 }
@@ -228,14 +228,14 @@ struct TSAdaptationField {
     }
 
     mutating func compute() {
-        length  = UInt8(truncatingBitPattern: TSAdaptationField.fixedSectionSize)
-        length += UInt8(truncatingBitPattern: PCR.count)
-        length += UInt8(truncatingBitPattern: OPCR.count)
-        length += UInt8(truncatingBitPattern: transportPrivateData.count)
+        length  = UInt8(extendingOrTruncating: TSAdaptationField.fixedSectionSize)
+        length += UInt8(extendingOrTruncating: PCR.count)
+        length += UInt8(extendingOrTruncating: OPCR.count)
+        length += UInt8(extendingOrTruncating: transportPrivateData.count)
         if let adaptationExtension:TSAdaptationExtensionField = adaptationExtension {
             length += adaptationExtension.length + 1
         }
-        length += UInt8(truncatingBitPattern: stuffingBytes.count)
+        length += UInt8(extendingOrTruncating: stuffingBytes.count)
         length -= 1
     }
 

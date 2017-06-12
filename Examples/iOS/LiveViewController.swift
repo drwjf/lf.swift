@@ -1,10 +1,11 @@
 import lf
 import UIKit
-import XCGLogger
+//import XCGLogger
 import AVFoundation
 
 let sampleRate:Double = 44_100
 
+@objcMembers
 final class LiveViewController: UIViewController {
     var rtmpConnection:RTMPConnection = RTMPConnection()
     var rtmpStream:RTMPStream!
@@ -23,7 +24,7 @@ final class LiveViewController: UIViewController {
     @IBOutlet var fpsControl:UISegmentedControl?
     @IBOutlet var effectSegmentControl:UISegmentedControl?
 
-    var currentPosition:AVCaptureDevicePosition = AVCaptureDevicePosition.back
+    var currentPosition:AVCaptureDevice.Position = AVCaptureDevice.Position.back
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +32,7 @@ final class LiveViewController: UIViewController {
         rtmpStream = RTMPStream(connection: rtmpConnection)
         rtmpStream.syncOrientation = true
         rtmpStream.captureSettings = [
-            "sessionPreset": AVCaptureSessionPreset1280x720,
+            "sessionPreset": AVCaptureSession.Preset.hd1280x720,
             "continuousAutofocus": true,
             "continuousExposure": true,
         ]
@@ -48,20 +49,20 @@ final class LiveViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        logger.info("viewWillAppear")
+        //logger.info("viewWillAppear")
         super.viewWillAppear(animated)
-        rtmpStream.attachAudio(AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)) { error in
-            logger.warning(error)
+        rtmpStream.attachAudio(AVCaptureDevice.default(for: AVMediaType.audio)) { error in
+            //logger.warning(error)
         }
         rtmpStream.attachCamera(DeviceUtil.device(withPosition: currentPosition)) { error in
-            logger.warning(error)
+            //logger.warning(error)
         }
         rtmpStream.addObserver(self, forKeyPath: "currentFPS", options: NSKeyValueObservingOptions.new, context: nil)
         lfView?.attachStream(rtmpStream)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        logger.info("viewWillDisappear")
+        //logger.info("viewWillDisappear")
         super.viewWillDisappear(animated)
         rtmpStream.removeObserver(self, forKeyPath: "currentFPS")
         rtmpStream.close()
@@ -69,10 +70,10 @@ final class LiveViewController: UIViewController {
     }
 
     @IBAction func rotateCamera(_ sender:UIButton) {
-        logger.info("rotateCamera")
-        let position:AVCaptureDevicePosition = currentPosition == .back ? .front : .back
+        //logger.info("rotateCamera")
+        let position:AVCaptureDevice.Position = currentPosition == .back ? .front : .back
         rtmpStream.attachCamera(DeviceUtil.device(withPosition: position)) { error in
-            logger.warning(error)
+            //logger.warning(error)
         }
         currentPosition = position
     }

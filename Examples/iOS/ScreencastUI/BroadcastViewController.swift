@@ -1,14 +1,9 @@
 import ReplayKit
 
 class BroadcastViewController: UIViewController {
-    @IBOutlet
-    var startButton:UIButton!
-
-    @IBOutlet
-    var endpointURLField:UITextField!
-    
-    @IBOutlet
-    var streamNameField:UITextField!
+    @IBOutlet var startButton:UIButton!
+    @IBOutlet var endpointURLField:UITextField!
+    @IBOutlet var streamNameField:UITextField!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,7 +11,6 @@ class BroadcastViewController: UIViewController {
     }
 
     func userDidFinishSetup() {
-
         let broadcastURL:URL = URL(string: endpointURLField.text!)!
 
         let streamName:String = streamNameField.text!

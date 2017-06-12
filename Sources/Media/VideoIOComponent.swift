@@ -43,11 +43,11 @@ final class VideoIOComponent: IOComponent {
         }
     }
 
-    var position:AVCaptureDevicePosition = .back
+    var position:AVCaptureDevice.Position = .back
 
     var videoSettings:[NSObject:AnyObject] = AVMixer.defaultVideoSettings {
         didSet {
-            output.videoSettings = videoSettings
+            output.videoSettings = videoSettings as! [String : Any]
         }
     }
 
@@ -57,12 +57,10 @@ final class VideoIOComponent: IOComponent {
                 return
             }
             for connection in output.connections {
-                if let connection:AVCaptureConnection = connection as? AVCaptureConnection {
-                    if (connection.isVideoOrientationSupported) {
-                        connection.videoOrientation = orientation
-                        if (torch) {
-                            setTorchMode(.on)
-                        }
+                if (connection.isVideoOrientationSupported) {
+                    connection.videoOrientation = orientation
+                    if (torch) {
+                        setTorchMode(.on)
                     }
                 }
             }
@@ -84,7 +82,7 @@ final class VideoIOComponent: IOComponent {
             guard continuousAutofocus != oldValue else {
                 return
             }
-            let focusMode:AVCaptureFocusMode = continuousAutofocus ? .continuousAutoFocus : .autoFocus
+            let focusMode:AVCaptureDevice.FocusMode = continuousAutofocus ? .continuousAutoFocus : .autoFocus
             guard let device:AVCaptureDevice = (input as? AVCaptureDeviceInput)?.device,
                 device.isFocusModeSupported(focusMode) else {
                 logger.warning("focusMode(\(focusMode.rawValue)) is not supported")
@@ -144,7 +142,7 @@ final class VideoIOComponent: IOComponent {
             guard continuousExposure != oldValue else {
                 return
             }
-            let exposureMode:AVCaptureExposureMode = continuousExposure ? .continuousAutoExposure : .autoExpose
+            let exposureMode:AVCaptureDevice.ExposureMode = continuousExposure ? .continuousAutoExposure : .autoExpose
             guard let device:AVCaptureDevice = (input as? AVCaptureDeviceInput)?.device,
                 device.isExposureModeSupported(exposureMode) else {
                 logger.warning("exposureMode(\(exposureMode.rawValue)) is not supported")
@@ -166,7 +164,7 @@ final class VideoIOComponent: IOComponent {
             if (_output == nil) {
                 _output = AVCaptureVideoDataOutput()
                 _output!.alwaysDiscardsLateVideoFrames = true
-                _output!.videoSettings = videoSettings
+                _output!.videoSettings = videoSettings as! [String : Any]
             }
             return _output!
         }
@@ -250,9 +248,6 @@ final class VideoIOComponent: IOComponent {
         input = try AVCaptureDeviceInput(device: camera)
         mixer.session.addOutput(output)
         for connection in output.connections {
-            guard let connection:AVCaptureConnection = connection as? AVCaptureConnection else {
-                continue
-            }
             if (connection.isVideoOrientationSupported) {
                 connection.videoOrientation = orientation
             }
@@ -264,7 +259,7 @@ final class VideoIOComponent: IOComponent {
         drawable?.position = camera.position
     }
 
-    func setTorchMode(_ torchMode:AVCaptureTorchMode) {
+    func setTorchMode(_ torchMode:AVCaptureDevice.TorchMode) {
         guard let device:AVCaptureDevice = (input as? AVCaptureDeviceInput)?.device, device.isTorchModeSupported(torchMode) else {
             logger.warning("torchMode(\(torchMode)) is not supported")
             return
@@ -323,7 +318,7 @@ final class VideoIOComponent: IOComponent {
 
 extension VideoIOComponent: AVCaptureVideoDataOutputSampleBufferDelegate {
     // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
-    func captureOutput(_ captureOutput:AVCaptureOutput!, didOutputSampleBuffer sampleBuffer:CMSampleBuffer!, from connection:AVCaptureConnection!) {
+    func captureOutput(_ captureOutput:AVCaptureOutput, didOutput sampleBuffer:CMSampleBuffer, from connection:AVCaptureConnection) {
         guard var buffer:CVImageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return
         }
@@ -343,7 +338,7 @@ extension VideoIOComponent: AVCaptureVideoDataOutputSampleBufferDelegate {
             duration: sampleBuffer.duration
         )
         drawable?.draw(image: image)
-        mixer?.recorder.appendSampleBuffer(sampleBuffer, mediaType: AVMediaTypeVideo)
+        mixer?.recorder.appendSampleBuffer(sampleBuffer, mediaType: AVMediaType.video.rawValue)
     }
 }
 

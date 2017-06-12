@@ -4,9 +4,9 @@ import AVFoundation
 final class VideoGravityUtil {
     @inline(__always) static func calclute(_ videoGravity:String, inRect:inout CGRect, fromRect:inout CGRect) {
         switch videoGravity {
-        case AVLayerVideoGravityResizeAspect:
+        case AVLayerVideoGravity.resizeAspect.rawValue:
             resizeAspect(&inRect, fromRect: &fromRect)
-        case AVLayerVideoGravityResizeAspectFill:
+        case AVLayerVideoGravity.resizeAspectFill.rawValue:
             resizeAspectFill(&inRect, fromRect: &fromRect)
         default:
             break

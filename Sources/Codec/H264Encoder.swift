@@ -9,6 +9,7 @@ protocol VideoEncoderDelegate: class {
 }
 
 // MARK: -
+@objcMembers
 final class H264Encoder: NSObject {
 
     static let supportedSettingsKeys:[String] = [
